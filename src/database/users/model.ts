@@ -1,5 +1,5 @@
-import { CreateTableInput, CreateTableCommand } from '@aws-sdk/client-dynamodb'
-import documentClient from '../client';
+import { CreateTableInput, CreateTableCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBService } from '../dynamodb.service';
 
 const userTableParams: CreateTableInput = {
     TableName: 'Users',
@@ -30,9 +30,14 @@ const userTableParams: CreateTableInput = {
 }
 
 const command = new CreateTableCommand(userTableParams);
+const dynamoDBService = new DynamoDBService();
+const client = dynamoDBService.getClient();
 
-documentClient.send(command).then(res => {
-    console.log(res);
-}).catch(err => {
-    console.log(err);
-})
+
+client.createTable(userTableParams, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(data);
+    }
+  });

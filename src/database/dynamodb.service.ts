@@ -4,17 +4,26 @@ import config from './config';
 
 @Injectable()
 export class DynamoDBService {
-  private readonly dynamoDB: DynamoDB.DocumentClient;
+  private readonly client: DynamoDB;
+  private readonly documentClient: DynamoDB.DocumentClient;
 
   constructor() {
-    this.dynamoDB = new DynamoDB.DocumentClient({
+    this.client = new DynamoDB({
       region: config.aws.region,
       accessKeyId: config.aws.accessKeyId,
       secretAccessKey: config.aws.secretAccessKey,
     });
+
+    this.documentClient = new DynamoDB.DocumentClient({
+      service: this.client,
+    });
   }
 
-  getClient(): DynamoDB.DocumentClient {
-    return this.dynamoDB;
+  getClient(): DynamoDB {
+    return this.client;
+  }
+
+  getDocumentClient(): DynamoDB.DocumentClient {
+    return this.documentClient;
   }
 }

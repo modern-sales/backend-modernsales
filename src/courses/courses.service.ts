@@ -6,7 +6,6 @@ import { Course } from './courses.model';
 @Injectable()
 export class CoursesService {
   private readonly tableName: string = 'ms-courses';
-
   constructor(private readonly dynamoDBService: DynamoDBService) {}
 
   async createCourse(course: Course): Promise<Course> {
@@ -15,7 +14,7 @@ export class CoursesService {
       Item: course,
     };
 
-    await this.dynamoDBService.getClient().put(params).promise();
+    await this.dynamoDBService.getDocumentClient().put(params).promise();
     return course;
   }
 
@@ -24,7 +23,7 @@ export class CoursesService {
       TableName: this.tableName,
     };
 
-    const result = await this.dynamoDBService.getClient().scan(params).promise();
-    return result.Items as Course[];
+    const result = await this.dynamoDBService.getDocumentClient().scan(params).promise();
+    return (result.Items as unknown) as Course[];
   }
 }

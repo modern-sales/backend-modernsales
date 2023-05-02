@@ -1,10 +1,11 @@
-import { UserController } from "./users.controller";
-import { UsersService } from "./users.service";
-import {Module} from "@nestjs/common";
+import { Module } from '@nestjs/common';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
+import { DynamoDBService } from '../database/dynamodb.service';
 
 @Module({
-    controllers: [UserController],
-    providers: [UsersService],
+  imports: [],
+  controllers: [UsersController],
+  providers: [UsersService, DynamoDBService],
 })
-
-export class UsersModule {};
+export class UsersModule {}
