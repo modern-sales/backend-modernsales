@@ -1,29 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { DynamoDB } from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import config from './config';
 
 @Injectable()
 export class DynamoDBService {
-  private readonly client: DynamoDB;
-  private readonly documentClient: DynamoDB.DocumentClient;
+  private readonly client: DynamoDBClient;
+  private readonly documentClient: DynamoDBDocumentClient;
 
   constructor() {
-    this.client = new DynamoDB({
+    this.client = new DynamoDBClient({
       region: config.aws.region,
-      accessKeyId: config.aws.accessKeyId,
-      secretAccessKey: config.aws.secretAccessKey,
+      credentials: {
+        accessKeyId: config.aws.accessKeyId as string,
+        secretAccessKey: config.aws.secretAccessKey as string,
+      },
     });
 
-    this.documentClient = new DynamoDB.DocumentClient({
-      service: this.client,
-    });
+    this.documentClient = DynamoDBDocumentClient.from(this.client);
   }
 
-  getClient(): DynamoDB {
+  getClient(): DynamoDBClient {
     return this.client;
   }
 
-  getDocumentClient(): DynamoDB.DocumentClient {
+  getDocumentClient(): DynamoDBDocumentClient {
     return this.documentClient;
   }
 }

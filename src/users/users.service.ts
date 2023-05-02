@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DynamoDB } from 'aws-sdk';
 import { DynamoDBService } from '../database/dynamodb.service';
 import { User } from './users.model';
+import { PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
 export class UsersService {
@@ -9,21 +10,27 @@ export class UsersService {
   constructor(private readonly dynamoDBService: DynamoDBService) {}
 
   async createUser(user: User): Promise<User> {
-    const params: DynamoDB.DocumentClient.PutItemInput = {
+    const documentClient: DynamoDBDocumentClient =
+      this.dynamoDBService.getDocumentClient();
+
+    const params = {
       TableName: this.tableName,
       Item: user,
     };
 
-    await this.dynamoDBService.getDocumentClient().put(params).promise();
+    await documentClient.send(new PutCommand(params));
     return user;
   }
 
   async getUsers(): Promise<User[]> {
-    const params: DynamoDB.DocumentClient.ScanInput = {
+    const documentClient: DynamoDBDocumentClient =
+      this.dynamoDBService.getDocumentClient();
+
+    const params = {
       TableName: this.tableName,
     };
 
-    const result = await this.dynamoDBService.getDocumentClient().scan(params).promise();
-    return (result.Items as unknown) as User[];
+    const result = await documentClient.send(new ScanCommand(params));
+    return result.Items as User[];
   }
 }

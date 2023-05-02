@@ -8,6 +8,10 @@ export class AuthController {
   @Post('send-code')
   async sendOneTimeCode(@Body('email') email: string): Promise<void> {
     const code = await this.emailService.generateAndSendOneTimeCode(email);
-    await this.emailService.sendEmail(email, 'Your One-Time Code', `Your one-time code is: ${code}`);
+    await this.emailService.sendEmail(
+      email,
+      'Your One-Time Code',
+      `Your one-time code is: ${code}`,
+    );
   }
 }

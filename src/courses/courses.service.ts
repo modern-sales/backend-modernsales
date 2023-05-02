@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DynamoDB } from 'aws-sdk';
 import { DynamoDBService } from '../database/dynamodb.service';
 import { Course } from './courses.model';
+import { PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
 export class CoursesService {
@@ -9,21 +10,27 @@ export class CoursesService {
   constructor(private readonly dynamoDBService: DynamoDBService) {}
 
   async createCourse(course: Course): Promise<Course> {
-    const params: DynamoDB.DocumentClient.PutItemInput = {
+    const documentClient: DynamoDBDocumentClient =
+      this.dynamoDBService.getDocumentClient();
+
+    const params = {
       TableName: this.tableName,
       Item: course,
     };
 
-    await this.dynamoDBService.getDocumentClient().put(params).promise();
+    await documentClient.send(new PutCommand(params));
     return course;
   }
 
   async getCourses(): Promise<Course[]> {
-    const params: DynamoDB.DocumentClient.ScanInput = {
+    const documentClient: DynamoDBDocumentClient =
+      this.dynamoDBService.getDocumentClient();
+
+    const params = {
       TableName: this.tableName,
     };
 
-    const result = await this.dynamoDBService.getDocumentClient().scan(params).promise();
-    return (result.Items as unknown) as Course[];
+    const result = await documentClient.send(new ScanCommand(params));
+    return result.Items as Course[];
   }
 }

@@ -9,7 +9,7 @@ import { VerifyTokenMiddleware } from './middleware/verify-token.middleware';
 import { VerifyTokenAndAuthMiddleware } from './middleware/verify-token-and-auth.middleware';
 import { VerifyTokenAndAdminMiddleware } from './middleware/verify-token-and-admin.middleware';
 import { AuthModule } from './auth/auth.module';
-import { EmailModule } from './email/email.module'
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -23,7 +23,6 @@ import { EmailModule } from './email/email.module'
   providers: [AppService],
 })
 export class AppModule {
-  
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
