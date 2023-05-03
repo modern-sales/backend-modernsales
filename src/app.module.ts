@@ -5,9 +5,9 @@ import { ConfigModule } from '@nestjs/config'; // Import ConfigModule
 import { UsersModule } from './users/users.module';
 import { CoursesModule } from './courses/courses.module';
 
-import { VerifyTokenMiddleware } from './middleware/verify-token.middleware';
-import { VerifyTokenAndAuthMiddleware } from './middleware/verify-token-and-auth.middleware';
-import { VerifyTokenAndAdminMiddleware } from './middleware/verify-token-and-admin.middleware';
+import { VerifyTokenMiddleware } from './auth/middleware/verify-token.middleware';
+import { VerifyTokenAndAuthMiddleware } from './auth/middleware/verify-token-and-auth.middleware';
+import { VerifyTokenAndAdminMiddleware } from './auth/middleware/verify-token-and-admin.middleware';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 

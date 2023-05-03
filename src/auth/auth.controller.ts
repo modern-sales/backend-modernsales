@@ -5,6 +5,11 @@ import { EmailService } from '../email/email.service';
 export class AuthController {
   constructor(private readonly emailService: EmailService) {}
 
+  @Post('login')
+  async login(@Body('email') email: string): Promise<void> {
+    await this.emailService.generateAndSendOneTimeCode(email); 
+  }
+
   @Post('send-code')
   async sendOneTimeCode(@Body('email') email: string): Promise<void> {
     const code = await this.emailService.generateAndSendOneTimeCode(email);
