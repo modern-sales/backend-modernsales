@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import config from './config';
+import { dynamoDBConfig } from 'src/config/app.config';
 
 @Injectable()
 export class DynamoDBService {
@@ -9,13 +9,7 @@ export class DynamoDBService {
   private readonly documentClient: DynamoDBDocumentClient;
 
   constructor() {
-    this.client = new DynamoDBClient({
-      region: config.aws.region,
-      credentials: {
-        accessKeyId: config.aws.accessKeyId as string,
-        secretAccessKey: config.aws.secretAccessKey as string,
-      },
-    });
+    this.client = new DynamoDBClient(dynamoDBConfig);
 
     this.documentClient = DynamoDBDocumentClient.from(this.client);
   }
