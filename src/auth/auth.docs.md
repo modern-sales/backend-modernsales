@@ -11,3 +11,4 @@
 
 # Login
     1. Users input just their email and click 'receive code via email' - their email is sent to the api route /auth/otp
+    2. Users are provided with a jwt that is valid for the next 30 days, stored in httpOnly cookies
