@@ -1,14 +1,9 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req, Res } from '@nestjs/common';
 import { EmailService } from '../email/email.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly emailService: EmailService) {}
-
-  @Post('login')
-  async login(@Body('email') email: string): Promise<void> {
-    await this.emailService.generateAndSendOneTimeCode(email); 
-  }
 
   @Post('send-code')
   async sendOneTimeCode(@Body('email') email: string): Promise<void> {
