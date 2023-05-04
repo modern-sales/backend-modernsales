@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
 import { SES, SendEmailCommand } from '@aws-sdk/client-ses';
+import { OtpStorage } from './types/otp-storage.interface';
 
 @Injectable()
 export class EmailService {
   private ses: SES;
-  private transporter;
+  private otpStorage: OtpStorage[] = [];
 
   constructor() {
     this.ses = new SES({
@@ -15,21 +15,11 @@ export class EmailService {
       },
       region: process.env.AWS_SES_REGION,
     });
-
-    this.transporter = nodemailer.createTransport({
-      host: 'your_smtp_host',
-      port: 465,
-      secure: true, // true for 465, false for other ports
-      auth: {
-        user: 'your_email',
-        pass: 'your_email_password',
-      },
-    });
   }
 
   async sendEmail(to: string, subject: string, text: string): Promise<void> {
     const params = new SendEmailCommand({
-      Source: 'your_email',
+      Source: process.env.AWS_SES_SENDER_EMAIL as string,
       Destination: {
         ToAddresses: [to],
       },
@@ -48,14 +38,35 @@ export class EmailService {
     await this.ses.send(params);
   }
 
-  public generateAndSendOneTimeCode(email: string): Promise<void> {
+  public async generateAndSendOneTimeCode(email: string): Promise<string> {
     const code = this.generateOneTimeCode();
     const subject = 'Your One-Time Code';
     const text = `Your one-time code is: ${code}`;
-    return this.sendEmail(email, subject, text);
+    await this.sendEmail(email, subject, text);
+  
+    const otpExpirationTimeInMinutes = 5;
+    const expiresAt = Date.now() + otpExpirationTimeInMinutes * 60 * 1000;
+    
+    // Remove any existing OTP for the email before adding a new one
+    this.otpStorage = this.otpStorage.filter((otp) => otp.email !== email);
+    this.otpStorage.push({ email, otp: code, expiresAt });
+  
+    return code;
+  }
+
+  public isValidOtp(email: string, otp: string): boolean {
+    const storedOtp = this.otpStorage.find((o) => o.email === email);
+
+    if (!storedOtp || storedOtp.expiresAt < Date.now()) {
+      return false;
+    }
+
+    return storedOtp.otp === otp;
   }
 
   private generateOneTimeCode(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
+
+  
 }

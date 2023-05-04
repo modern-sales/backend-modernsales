@@ -10,6 +10,7 @@ import { VerifyTokenAndAuthMiddleware } from './auth/middleware/verify-token-and
 import { VerifyTokenAndAdminMiddleware } from './auth/middleware/verify-token-and-admin.middleware';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
+import { StripeModule } from './payment/stripe.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { EmailModule } from './email/email.module';
     CoursesModule,
     AuthModule,
     EmailModule,
+    StripeModule
   ],
   controllers: [AppController],
   providers: [AppService],
