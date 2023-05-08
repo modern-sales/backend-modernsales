@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello, this is the Modern Sales backend, hope it works, v10!';
+    return 'Hello, this is the Modern Sales backend, hope it works, v10, with no .env file!';
   }
 }
