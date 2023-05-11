@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "backend and api for the modern sales web ecosystem",
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },  
   "author": "Cal Day Ham",
   "private": true,
