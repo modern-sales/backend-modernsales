@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { dynamoDBConfig } from 'src/config/app.config';
+import { dynamoDBConfig } from '@config/app.config';
 
 @Injectable()
 export class DynamoDBService {

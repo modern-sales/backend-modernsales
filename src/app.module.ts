@@ -2,15 +2,12 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config'; // Import ConfigModule
-import { UsersModule } from './users/users.module';
-import { CoursesModule } from './courses/courses.module';
+import { UsersModule } from '@modules/users/users.module';
+import { CoursesModule } from '@modules/courses/courses.module';
+import { AuthModule } from '@modules/auth/auth.module';
 
-import { VerifyTokenMiddleware } from './auth/middleware/verify-token.middleware';
-import { VerifyTokenAndAuthMiddleware } from './auth/middleware/verify-token-and-auth.middleware';
-import { VerifyTokenAndAdminMiddleware } from './auth/middleware/verify-token-and-admin.middleware';
-import { AuthModule } from './auth/auth.module';
-import { EmailModule } from './email/email.module';
-import { StripeModule } from './payment/stripe.module';
+import { EmailModule } from '@services/aws_ses/email.module';
+import { StripeModule } from '@services/stripe/stripe.module';
 
 @Module({
   imports: [
@@ -27,11 +24,7 @@ import { StripeModule } from './payment/stripe.module';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(
-        VerifyTokenMiddleware,
-        VerifyTokenAndAuthMiddleware,
-        VerifyTokenAndAdminMiddleware,
-      )
+      .apply()
       .forRoutes(
         { path: '/protected', method: RequestMethod.ALL },
         // Add more protected routes here...

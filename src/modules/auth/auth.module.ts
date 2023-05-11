@@ -5,8 +5,8 @@ import { UsersModule } from '../users/users.module'; // Import UsersModule here
 import { JwtStrategy } from './middleware/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './middleware/constants';
-import { EmailModule } from 'src/email/email.module';
+import { jwtConstants } from '@config/app.config';
+import { EmailModule } from '@services/aws_ses/email.module';
 
 @Module({
   imports: [

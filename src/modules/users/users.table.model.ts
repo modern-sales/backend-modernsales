@@ -2,7 +2,7 @@ import {
   CreateTableCommand,
   CreateTableCommandInput,
 } from '@aws-sdk/client-dynamodb';
-import { DynamoDBService } from '../database/dynamodb.service';
+import { DynamoDBService } from '@services/aws_dynamodb/dynamodb.service';
 
 const userTableParams: CreateTableCommandInput = {
   TableName: 'Users',

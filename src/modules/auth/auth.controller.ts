@@ -1,5 +1,5 @@
 import { Controller, Post, Param, Res, Body, HttpStatus } from '@nestjs/common';
-import { EmailService } from '../email/email.service';
+import { EmailService } from '@services/aws_ses/email.service';
 import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';

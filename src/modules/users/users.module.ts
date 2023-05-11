@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { DynamoDBService } from '../database/dynamodb.service';
+import { DynamoDBService } from '@services/aws_dynamodb/dynamodb.service';
 
 @Module({
   imports: [],

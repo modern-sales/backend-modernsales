@@ -10,15 +10,21 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "incremental": true,
     "skipLibCheck": true,
-    "strict": true, // enables a wide range of type checking behavior
+    "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "typeRoots": ["./node_modules/@types", "node_modules/@types"]
+    "typeRoots": ["./node_modules/@types", "node_modules/@types"],
+    "paths": {
+      "@config/*": ["config/*"],
+      "@modules/*": ["modules/*"],
+      "@services/*": ["services/*"],
+      "@shared/*": ["shared/*"]
+    }
   },
   "exclude": ["node_modules", "dist", "test", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }
