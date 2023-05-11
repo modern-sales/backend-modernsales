@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBService } from '@services/aws_dynamodb/dynamodb.service';
-import { User } from './users.model';
+import { User } from './models/user.model';
 import { PutCommand, QueryCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 

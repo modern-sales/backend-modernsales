@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "backend and api for the modern sales web ecosystem",
   "engines": {
-    "node": "18.x"
-  },  
+    "node": "14.x"
+  },
   "author": "Cal Day Ham",
   "private": true,
   "license": "UNLICENSED",
@@ -33,6 +33,7 @@
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "jsonwebtoken": "^9.0.0",
     "nodemailer": "^6.9.1",
     "passport-jwt": "^4.0.1",
