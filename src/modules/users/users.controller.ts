@@ -6,13 +6,19 @@ import { User } from './models/user.model';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get()
+  async getUsers(): Promise<User[]> {
+    return this.usersService.getUsers();
+  }
+
+  @Get('test')
+  async test(): Promise<any> {
+    return 'the server is alive! (and you can reach the users endpoint! - maybe database connection now? and auth? yay)'
+  }
+
   @Post()
   async createUser(@Body() user: any): Promise<any> {
     return this.usersService.createUser(user);
   }
 
-  @Get()
-  async getUsers(): Promise<User[]> {
-    return this.usersService.getUsers();
-  }
 }
