@@ -1,6 +1,7 @@
 .env
 .env.local
 docker-compose.yml
+Dockerfile
 
 # compiled output
 /dist
