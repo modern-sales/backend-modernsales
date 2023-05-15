@@ -1,13 +1,12 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config'; // Import ConfigModule
+import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from '@modules/users/users.module';
 import { CoursesModule } from '@modules/courses/courses.module';
 import { EmailModule } from '@services/aws_ses/email.module';
 import { StripeModule } from '@services/stripe/stripe.module';
 import { AuthModule } from '@modules/auth/auth.module';
-
 
 @Module({
   imports: [
@@ -16,18 +15,9 @@ import { AuthModule } from '@modules/auth/auth.module';
     CoursesModule,
     EmailModule,
     StripeModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply()
-      .forRoutes(
-        { path: '/protected', method: RequestMethod.ALL },
-        // Add more protected routes here...
-      );
-  }
-}
+export class AppModule {}

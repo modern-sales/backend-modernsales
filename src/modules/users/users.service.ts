@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBService } from '@services/aws_dynamodb/dynamodb.service';
 import { User } from './models/user.model';
-import { PutCommand, QueryCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import {
+  PutCommand,
+  QueryCommand,
+  ScanCommand,
+  DeleteCommand, // Add this import
+} from '@aws-sdk/lib-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
 export class UsersService {
   private readonly tableName: string = 'ms-users';
-  constructor(private readonly dynamoDBService: DynamoDBService) { }
+  constructor(private readonly dynamoDBService: DynamoDBService) {}
 
   async createUser(user: User): Promise<User> {
     const documentClient: DynamoDBDocumentClient =
@@ -35,7 +40,8 @@ export class UsersService {
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
-    const documentClient: DynamoDBDocumentClient = this.dynamoDBService.getDocumentClient();
+    const documentClient: DynamoDBDocumentClient =
+      this.dynamoDBService.getDocumentClient();
 
     const params = {
       TableName: this.tableName,
@@ -46,7 +52,6 @@ export class UsersService {
     };
 
     const result = await documentClient.send(new QueryCommand(params));
-    console.log(result);
 
     if (result.Items && result.Items.length > 0) {
       return result.Items[0] as User;
@@ -55,4 +60,18 @@ export class UsersService {
     }
   }
 
+  // Add the deleteUser method
+  async deleteUser(email: string): Promise<void> {
+    const documentClient: DynamoDBDocumentClient =
+      this.dynamoDBService.getDocumentClient();
+
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        primary_email: email,
+      },
+    };
+
+    await documentClient.send(new DeleteCommand(params));
+  }
 }
