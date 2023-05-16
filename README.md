@@ -7,6 +7,15 @@ lead developer: Cal Day Ham [https://caldayham.com]
 company: Modern Sales XYZ LLC
 ```
 
+## Technologies
+
+- Node.js
+- NestJS
+- AWS SDK (DynamoDB, S3, SES)
+- SendGrid
+- JSON Web Tokens (JWT)
+- Passport.js
+
 ## Project Structure
 
 The `src` folder has the following structure:

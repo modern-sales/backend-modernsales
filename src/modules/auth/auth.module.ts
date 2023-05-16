@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt-startegy/jwt.strategy';
+import { EmailModule } from '@services/sendgrid_email/email.module'; // Make sure to use the correct path to the EmailModule
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JwtStrategy } from './jwt-startegy/jwt.strategy';
       }),
       inject: [ConfigService],
     }),
+    EmailModule, // Add this line to import EmailModule
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
