@@ -1,32 +1,23 @@
-import { Controller, Post, Body } from '@nestjs/common';
+// auth.controller.ts
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { EmailService } from '@services/sendgrid_email/email.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly emailService: EmailService,
-    ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Post('signup')
-  async signUp(@Body() user: { email: string; password: string; name: string }) {
-    return await this.authService.signUp(user);
+  @Post('request-otp')
+  @HttpCode(200)
+  async requestOtp(@Body('email') email: string): Promise<void> {
+    await this.authService.sendOtp(email);
   }
 
-  @Post('login')
-  async login(@Body() credentials: { email: string; password: string }) {
-    return await this.authService.login(credentials);
-  } 
-
-  @Post('send-otp')
-  async sendOtp(@Body('email') email: string): Promise<any> {
-    // Generate your OTP here
-    const otp = '123456';
-
-    // Send the OTP email
-    await this.emailService.sendOtpEmail(email, otp);
-
-    return { message: 'OTP email sent' };
+  @Post('verify-otp')
+  @HttpCode(200)
+  async verifyOtp(
+    @Body('email') email: string,
+    @Body('otp') otp: string,
+  ): Promise<void> {
+    await this.authService.verifyOtp(email, otp);
   }
 }
