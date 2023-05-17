@@ -14,7 +14,7 @@ export class EmailService {
       port: 587,
       secure: false,
       auth: {
-        user: 'apikey',
+        user: process.env.SENDGRID_USERNAME as string,
         pass: process.env.SENDGRID_API_KEY as string,
       },
     });

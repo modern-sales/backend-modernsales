@@ -7,7 +7,7 @@ export class User {
   staltedOTP!: string;
   OTPExpiration!: Date; // OTP stored on the clients browser will be sent over to the server along with the current date and time, and the server will check if the OTP is still valid
 
-  courses?: [
+  purchasedCourses?: [
       {
           courseID: string;
           purchaseID: string;
