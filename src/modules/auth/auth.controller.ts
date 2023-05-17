@@ -8,8 +8,9 @@ export class AuthController {
 
   @Post('request-otp')
   @HttpCode(200)
-  async requestOtp(@Body('email') email: string): Promise<void> {
-    await this.authService.sendOtp(email);
+  async requestOtp(@Body('email') email: string): Promise<{ success: boolean }> {
+    const success = await this.authService.sendOtp(email);
+    return { success };
   }
 
   @Post('verify-otp')

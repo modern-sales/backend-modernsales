@@ -1,5 +1,5 @@
 // auth.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EmailService } from '@services/sendgrid_email/email.service';
 import {DynamoDBService} from '@services/aws_dynamodb/dynamodb.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,12 +13,19 @@ export class AuthService {
     private readonly dynamoDBService: DynamoDBService,
   ) {}
 
-  async sendOtp(email: string): Promise<void> {
-    const otp = uuidv4().slice(0, 6);
+  async sendOtp(email: string): Promise<boolean> {
+    const otp = this.generateNumericOtp(4);
     const expiresAt = new Date(Date.now() + 3 * 7 * 24 * 60 * 60 * 1000); // 3 weeks
 
     this.otpMap.set(email, { otp, expiresAt });
-    await this.emailService.sendOtpEmail(email, otp);
+
+    try {
+      await this.emailService.sendOtpEmail(email, otp);
+      return true;
+    } catch (error) {
+      console.error('Error sending OTP email:', error);
+      throw new InternalServerErrorException('Failed to send OTP email');
+    }
   }
 
   async verifyOtp(email: string, otp: string): Promise<void> {
@@ -66,4 +73,12 @@ export class AuthService {
       throw new Error('Failed to store session data');
     }
   }  
+
+  private generateNumericOtp(length: number): string {
+    let otp = '';
+    for (let i = 0; i < length; i++) {
+      otp += Math.floor(Math.random() * 10).toString();
+    }
+    return otp;
+  }
 }
