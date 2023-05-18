@@ -8,15 +8,27 @@ import {
   DeleteCommand, // Add this import
 } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
   private readonly tableName: string = 'ms-users';
   constructor(private readonly dynamoDBService: DynamoDBService) {}
 
-  async createUser(user: User): Promise<User> {
+  async createUser(email: string, name: string): Promise<User> {
     const documentClient: DynamoDBDocumentClient =
       this.dynamoDBService.getDocumentClient();
+
+    const userId = uuidv4();
+
+    // Build a new User object
+    const user: User = {
+      _id: userId,
+      email: email,
+      name: name,
+      staltedOTP: '',
+      OTPExpiration: new Date(),
+    };
 
     const params = {
       TableName: this.tableName,

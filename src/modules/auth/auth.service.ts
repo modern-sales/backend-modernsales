@@ -2,6 +2,7 @@
 import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { EmailService } from '@services/sendgrid_email/email.service';
 import { DynamoDBService } from '@services/aws_dynamodb/dynamodb.service';
+import { UsersService } from '@modules/users/users.service'; // Add this import
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -11,12 +12,54 @@ export class AuthService {
   constructor(
     private readonly emailService: EmailService,
     private readonly dynamoDBService: DynamoDBService,
+    private readonly usersService: UsersService, // Add this injection
   ) { }
 
-  async signUpUser(email: string, name: string): Promise<boolean> {
-    // Implement custom signup logic here, if needed.
-    // For now, it simply sends an OTP.
+  async sendLoginOtp(email: string): Promise<boolean> {
+    // Check if the user exists before sending the OTP
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Send the OTP and store it for later verification
     return this.sendOtp(email);
+  }
+
+  async sendSignUpOtp(email: string, name: string): Promise<boolean> {
+    // Check if the user already exists
+    const user = await this.usersService.findUserByEmail(email);
+    if (user) {
+      throw new BadRequestException('User already exists');
+    }
+
+    // Send the OTP and store it for later verification
+    return this.sendOtp(email);
+  }
+
+  async verifyLoginOtp(email: string, otp: string): Promise<void> {
+    // Verify the OTP
+    this.verifyOtp(email, otp);
+
+    // OTP is valid, create a session and store it in DynamoDB
+    const sessionId = uuidv4();
+    const sessionExpiresAt = new Date(Date.now() + 3 * 7 * 24 * 60 * 60 * 1000); // 3 weeks
+
+    await this.storeSessionData(sessionId, email, sessionExpiresAt);
+  }
+
+  async verifySignUpOtp(email: string, otp: string): Promise<void> {
+    // Verify the OTP
+    this.verifyOtp(email, otp);
+
+    // Create a new user
+    await this.usersService.createUser( email, ' ' );
+
+    // OTP is valid, create a session and store it in DynamoDB
+    const sessionId = uuidv4();
+    const sessionExpiresAt = new Date(Date.now() + 3 * 7 * 24 * 60 * 60 * 1000); // 3 weeks
+
+    await this.storeSessionData(sessionId, email, sessionExpiresAt);
   }
 
   async sendOtp(email: string): Promise<boolean> {

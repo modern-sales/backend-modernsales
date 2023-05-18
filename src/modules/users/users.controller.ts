@@ -19,8 +19,9 @@ export class UsersController {
   }
 
   @Post()
-  async createUser(@Body() user: any): Promise<any> {
-    return this.usersService.createUser(user);
+  async createUser(@Body() user: { email: string; name: string }): Promise<any> {
+    const { email, name } = user;
+    return this.usersService.createUser(email, name);
   }
 
   @UseGuards(JwtAuthGuard, AdminAuthGuard)

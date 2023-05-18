@@ -6,10 +6,10 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('request-otp')
+  @Post('login/request-otp')
   @HttpCode(200)
-  async requestOtp(@Body('email') email: string): Promise<{ success: boolean; message?: string }> {
-    const success = await this.authService.sendOtp(email);
+  async requestLoginOtp(@Body('email') email: string): Promise<{ success: boolean; message?: string }> {
+    const success = await this.authService.sendLoginOtp(email);
     if (success) {
       return { success };
     } else {
@@ -17,22 +17,32 @@ export class AuthController {
     }
   }
 
-  @Post('signup')
-  @HttpCode(201)
-  async signUpUser(
-    @Body('email') email: string,
-    @Body('name') name: string,
-  ): Promise<{ success: boolean }> {
-    const success = await this.authService.signUpUser(email, name);
-    return { success };
+  @Post('signup/request-otp')
+  @HttpCode(200)
+  async requestSignUpOtp(@Body('email') email: string, @Body('name') name: string): Promise<{ success: boolean; message?: string }> {
+    const success = await this.authService.sendSignUpOtp(email, name);
+    if (success) {
+      return { success };
+    } else {
+      return { success, message: 'Email not sent' }; // Return a message when the email fails to send
+    }
   }
 
-  @Post('verify-otp')
+  @Post('login/verify-otp')
   @HttpCode(200)
-  async verifyOtp(
+  async verifyLoginOtp(
     @Body('email') email: string,
     @Body('otp') otp: string,
   ): Promise<void> {
-    await this.authService.verifyOtp(email, otp);
+    await this.authService.verifyLoginOtp(email, otp);
+  }
+
+  @Post('signup/verify-otp')
+  @HttpCode(200)
+  async verifySignUpOtp(
+    @Body('email') email: string,
+    @Body('otp') otp: string,
+  ): Promise<void> {
+    await this.authService.verifySignUpOtp(email, otp);
   }
 }
