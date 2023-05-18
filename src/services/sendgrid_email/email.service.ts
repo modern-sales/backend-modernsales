@@ -20,7 +20,7 @@ export class EmailService {
     });
   }
 
-  async sendOtpEmail(to: string, otp: string): Promise<void> {
+  async sendOtpEmail(to: string, otp: string): Promise<boolean> {
     const mailOptions = {
       from: process.env.SENDGRID_FROM_EMAIL, // sender address
       to, // list of receivers
@@ -48,8 +48,10 @@ export class EmailService {
     try {
       console.log('Sending OTP email...');
       await this.transporter.sendMail(mailOptions);
+      return true; // Return true when the email is sent successfully
     } catch (error) {
       console.error('Error sending OTP email:', error);
+      return false; // Return false when there is an error
     }
   }
 }
