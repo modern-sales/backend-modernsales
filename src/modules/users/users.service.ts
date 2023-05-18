@@ -57,7 +57,7 @@ export class UsersService {
 
     const params = {
       TableName: this.tableName,
-      KeyConditionExpression: 'primary_email = :email',
+      KeyConditionExpression: 'email = :email',
       ExpressionAttributeValues: {
         ':email': email,
       },

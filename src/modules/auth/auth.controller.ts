@@ -9,6 +9,7 @@ export class AuthController {
   @Post('login/request-otp')
   @HttpCode(200)
   async requestLoginOtp(@Body('email') email: string): Promise<{ success: boolean; message?: string }> {
+    console.log('requestLoginOtp');
     const success = await this.authService.sendLoginOtp(email);
     if (success) {
       return { success };
@@ -20,6 +21,7 @@ export class AuthController {
   @Post('signup/request-otp')
   @HttpCode(200)
   async requestSignUpOtp(@Body('email') email: string, @Body('name') name: string): Promise<{ success: boolean; message?: string }> {
+    console.log('requestSignUpOtp');
     const success = await this.authService.sendSignUpOtp(email, name);
     if (success) {
       return { success };
@@ -34,6 +36,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('otp') otp: string,
   ): Promise<void> {
+    console.log('verifyLoginOtp');
     await this.authService.verifyLoginOtp(email, otp);
   }
 
@@ -43,6 +46,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('otp') otp: string,
   ): Promise<void> {
+    console.log('verifySignUpOtp');
     await this.authService.verifySignUpOtp(email, otp);
   }
 }
