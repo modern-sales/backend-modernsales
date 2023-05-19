@@ -12,12 +12,25 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
-  private readonly tableName: string = 'ms-users';
+  private readonly tableName: string = process.env.DYNAMODB_USERS_TABLE as string;
   constructor(private readonly dynamoDBService: DynamoDBService) {}
 
+  async purchaseCourse(userId: string, courseId: string): Promise<boolean> {
+
+    // Get the user from DynamoDB
+    const user = await this.findUserById(userId);
+    if (!user) {
+      return false;
+    }
+
+    // Get the course from DynamoDB
+    
+
+    return true;
+  }
+
   async createUser(email: string, name: string): Promise<User> {
-    const documentClient: DynamoDBDocumentClient =
-      this.dynamoDBService.getDocumentClient();
+    const documentClient: DynamoDBDocumentClient = this.dynamoDBService.getDocumentClient();
 
     const userId = uuidv4();
 
@@ -26,8 +39,6 @@ export class UsersService {
       _id: userId,
       email: email,
       name: name,
-      staltedOTP: '',
-      OTPExpiration: new Date(),
     };
 
     const params = {
@@ -71,6 +82,27 @@ export class UsersService {
       return null;
     }
   }
+
+async findUserById(userId: string): Promise<User | null> {
+  const documentClient: DynamoDBDocumentClient = this.dynamoDBService.getDocumentClient();
+
+  const params = {
+    TableName: this.tableName,
+    IndexName: '_id-index',
+    KeyConditionExpression: '_id = :id',
+    ExpressionAttributeValues: {
+      ':id': userId,
+    },
+  };
+
+  const result = await documentClient.send(new QueryCommand(params));
+
+  if (result.Items && result.Items.length > 0) {
+    return result.Items[0] as User;
+  } else {
+    return null;
+  }
+}
 
   // Add the deleteUser method
   async deleteUser(email: string): Promise<void> {

@@ -4,9 +4,11 @@ export class User {
   name!: string;
   phone?: string;
   
-  staltedOTP?: string; //??? should this be stored with the user or with the session or both???
-  OTPExpiration?: Date; // OTP stored on the clients browser will be sent over to the server along with the current date and time, and the server will check if the OTP is still valid
-  sessionId?: string; //??? should this be stored with the user or with the session or both???
+  sessionId?: string;
+  sessionExpiresAt?: Date;
+
+  isAffiliate?: boolean;
+  affiliateCodeId?: string;
 
   purchasedCourses?: [
       {

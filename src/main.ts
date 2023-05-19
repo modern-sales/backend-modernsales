@@ -1,7 +1,9 @@
+// main.ts file
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { DynamoDBService } from '@services/aws_dynamodb/dynamodb.service';
+import cookieParser from 'cookie-parser'; 
 
 const session = require('express-session');
 const ConnectDynamoDB = require('connect-dynamodb');
@@ -16,16 +18,22 @@ async function bootstrap() {
   const rawClient = dynamoDBService.getRawClient();
 
   const DynamoDBStore = ConnectDynamoDB(session);
+
+  app.use(cookieParser()); 
+
   app.use(
     session({
       store: new DynamoDBStore({
         client: rawClient,
-        table: 'your-session-table',
+        table: process.env.DYNAMODB_SESSIONS_TABLE as string,
       }),
-      secret: 'your-session-secret',
+      secret: process.env.SESSIONS_SECRET as string,
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false, maxAge: 86400000 }, // 1 day
+      cookie: { 
+        secure: process.env.NODE_ENV === 'production', // true in production
+        maxAge: 86400000 // 1 day
+      },
     }),
   );
   const allowedOrigins = [

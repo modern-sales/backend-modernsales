@@ -1,7 +1,7 @@
 // dynamodb.service.ts
 import { Injectable } from '@nestjs/common';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, TranslateConfig } from '@aws-sdk/lib-dynamodb';
 import { DynamoDB } from '@aws-sdk/client-dynamodb';
 import { dynamoDBConfig } from '@config/app.config';
 
@@ -13,7 +13,17 @@ export class DynamoDBService {
 
   constructor() {
     this.client = new DynamoDBClient(dynamoDBConfig);
-    this.documentClient = DynamoDBDocumentClient.from(this.client);
+
+    // Add these lines to set up the translateConfig object
+    const translateConfig: TranslateConfig = {
+      marshallOptions: {
+        removeUndefinedValues: true,
+        convertClassInstanceToMap: true,
+      },
+    };
+
+    // Pass the translateConfig object to the DynamoDBDocumentClient.from() method
+    this.documentClient = DynamoDBDocumentClient.from(this.client, translateConfig);
     this.rawClient = new DynamoDB(this.client);
   }
 
