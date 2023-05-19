@@ -2,6 +2,7 @@
 .env.local
 docker-compose.yml
 Dockerfile
+tsconfig.spec.tsbuildinfo
 
 # compiled output
 /dist

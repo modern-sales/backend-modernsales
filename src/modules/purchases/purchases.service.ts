@@ -14,7 +14,7 @@ export class PurchasesService {
   ) {}
 
   async listUserPurchases(userId: string) {
-    return this.dynamoDBService.getUserPurchases(userId);
+    return
   }
 
   async getPurchaseById(purchaseId: string): Promise<Purchase | null> {
@@ -41,7 +41,6 @@ export class PurchasesService {
 
   async createPurchase(userId: string, purchaseId: string, token: string, amount: number) {
     const purchase = await this.stripeService.createCharge(token, amount, purchaseId, userId);
-    await this.dynamoDBService.recordPurchase(purchase);
     return purchase;
   }
 }
