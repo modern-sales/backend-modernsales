@@ -10,6 +10,9 @@ export class User {
   isAffiliate?: boolean;
   affiliateCodeId?: string;
 
+  isNewsletterSubscriber?: boolean;
+  isUnsubscribedFromNewsletter?: boolean;
+
   purchasedCourses?: [
       {
           courseId: string;

@@ -7,6 +7,9 @@ export class CreateUserDto {
     @ApiProperty({ description: 'The user\'s name', required: false, default: null })
     readonly name?: string;
 
+    @ApiProperty({ description: 'If the user is a newsletter Subscriber' })
+    readonly isNewsletterSubscriber?: boolean;
+
     constructor(email: string, name?: string) {
         this.email = email;
         this.name = name;
